@@ -118,7 +118,7 @@ public class ProjectService {
 	}
 
 	/**
-	 * TODO Busca si un empleado se encuentra asignado en el proyecto utilizando la
+	 * Busca si un empleado se encuentra asignado en el proyecto utilizando la
 	 * namedQuery Project.findEmployee
 	 * 
 	 * @param projectId
@@ -134,24 +134,21 @@ public class ProjectService {
 	}
 
 	/**
-	 * TODO Devuelve los meses con mayor número de horas de un año determinado
+	 * Devuelve los meses con mayor número de horas de un año determinado
 	 * utilizando la namedQuery Project.getTopMonths
 	 * 
 	 * @param projectId
-	 * @param year      a�o a seleccionar
-	 * @param rank      n�mero de meses a mostrar, se asume que rank <= 12
+	 * @param year      año a seleccionar
+	 * @param rank      nñmero de meses a mostrar, se asume que rank <= 12
 	 * @return una lista de objetos mes,hora ordenados de mayor a menor
 	 */
 	public List getTopHourMonths(int projectId, int year, int rank) {
-
-		return em.createNamedQuery("Project.getTopMonths", Integer.class)
-		.setParameter("projectId",projectId)
-		.setParameter("year",year)
-		.setParameter("rank",rank).getResultList();
+		return em.createNamedQuery("Project.getTopMonths").setParameter("idProject", projectId)
+				.setParameter("year", year).setMaxResults(rank).getResultList();
 	}
 
 	/**
-	 * TODO Devuelve para cada par mes-año el presupuesto teniendo en cuenta el
+	 * Devuelve para cada par mes-año el presupuesto teniendo en cuenta el
 	 * coste/hora de los empleados asociado utilizando la namedQuery
 	 * Project.getMonthlyBudget que realiza una consulta nativa
 	 * 
@@ -159,7 +156,8 @@ public class ProjectService {
 	 * @return una coleccion de objetos MonthlyBudget
 	 */
 	public List<MonthlyBudget> getMonthlyBudget(int projectId) {
-		return null;
+		return em.createNamedQuery("Project.getMonthlyBudget", MonthlyBudget.class).setParameter("projectId", projectId)
+				.getResultList();
 	}
 
 }

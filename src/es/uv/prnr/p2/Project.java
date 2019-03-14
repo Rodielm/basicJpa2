@@ -8,27 +8,27 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
-//TODO JPQL de Ejercicio3 employeeInProject 
-@NamedQuery(name = "Project.findEmployee", query = "select e.id from Employee e "
-		+ " inner join e.assignedTo aT "
+//JPQL de Ejercicio3 employeeInProject 
+@NamedQuery(name = "Project.findEmployee", query = "select e.id from Employee e " + " inner join e.assignedTo aT "
 		+ " where e.firstName like :name and e.last_name like :last_name and aT.id = :project_id")
 
-// TODO JPQL de Ejercicio3 getTopHoursMonth
-@NamedQuery(name = "Project.getTopMonths", query = "select ph.month, max(ph.month) as top from ProjectHours ph "
-+ "group by ph.month")
+// JPQL de Ejercicio3 getTopHoursMonth
+@NamedQuery(name = "Project.getTopMonths", query = "select ph.month, max(ph.hours) as top from ProjectHours ph "
+		+ " where ph.year = :year and ph.project.id = :idProject" + " group by ph.month " + " order by top ")
 
-// TODO Consulta SQL para getMonthly Budget. Se recomienda encarecidamente
+// Consulta SQL para getMonthly Budget. Se recomienda encarecidamente
 // testearla con Workbench
-// antes de incluirla aqu�
-// @NamedNativeQuery(name = "Project.getMonthlyBudget", query = "",
-// resultSetMapping = "MonthBudgetMapping")
+// antes de incluirla aquí
+@NamedNativeQuery(name = "Project.getMonthlyBudget", query = "select mh.year, mh.month, sum(round(((s.salary/1650)*mh.hours),0)) as amount from monthly_hours mh "
+		+ " inner join employees e on e.emp_no = mh.fk_employee"
+		+ " inner join salaries s on s.emp_no = mh.fk_employee and s.to_date = '9999-01-01'"
+		+ " where mh.fk_project = :projectId" + " group by mh.month, mh.year"
+		+ " order by mh.year", resultSetMapping = "MonthBudgetMapping")
 
-// TODO Mapeo del ResultSet para la consulta anterior
-/*
- * @SqlResultSetMapping( name="MonthBudgetMapping", classes = {
- * 
- * @ConstructorResult( targetClass=, columns= { } ) } )
- */
+// Mapeo del ResultSet para la consulta anterior
+@SqlResultSetMapping(name = "MonthBudgetMapping", classes = {
+		@ConstructorResult(targetClass = MonthlyBudget.class, columns = { @ColumnResult(name = "year"),
+				@ColumnResult(name = "month"), @ColumnResult(name = "amount", type = Float.class) }) })
 
 @Entity
 @Table(name = "project")
@@ -63,16 +63,12 @@ public class Project {
 	@JoinColumn(name = "fk_manager")
 	private Manager manager;
 
-	// TODO relacion * a * utilizando una tabla intermedia
+	// relacion * a * utilizando una tabla intermedia
 	@ManyToMany
 	@JoinTable(name = "project_team", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "emp_no"))
 	private Set<Employee> team = new HashSet<Employee>(0);
 
-	// TODO Relacion 1 a * con la clase ProjectHours
-	// @OneToMany(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "fk_employee")
-	// lazy persist
-	// @OneToMany(mappedBy="project")
+	// Relacion 1 a * con la clase ProjectHours
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "fk_project")
 	private List<ProjectHours> hours = new ArrayList<ProjectHours>();
@@ -97,7 +93,6 @@ public class Project {
 	 * @param e
 	 */
 	public void addEmployee(Employee e) {
-		// Codigo para relacionar el empleado con el proyecto
 		this.team.add(e);
 	}
 
@@ -110,7 +105,6 @@ public class Project {
 	 * @param hours
 	 */
 	public void addHours(Employee e, int month, int year, int hours) {
-		// Codigo añadir las horas del empleado
 		this.hours.add(new ProjectHours(month, year, hours, e, this));
 	}
 
