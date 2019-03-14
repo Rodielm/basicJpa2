@@ -23,7 +23,7 @@ import javax.persistence.*;
 		+ " inner join employees e on e.emp_no = mh.fk_employee"
 		+ " inner join salaries s on s.emp_no = mh.fk_employee and s.to_date = '9999-01-01'"
 		+ " where mh.fk_project = :projectId" + " group by mh.month, mh.year"
-		+ " order by mh.year", resultSetMapping = "MonthBudgetMapping")
+		+ " order by mh.year, mh.month", resultSetMapping = "MonthBudgetMapping")
 
 // Mapeo del ResultSet para la consulta anterior
 @SqlResultSetMapping(name = "MonthBudgetMapping", classes = {
