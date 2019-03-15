@@ -35,7 +35,8 @@ import javax.persistence.*;
 public class Project {
 
 	@Id
-	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
 	private int id;
 
 	@Column(name = "name", unique = true)
@@ -59,18 +60,18 @@ public class Project {
 	private String area;
 
 	// Relacion * a 1 con Project
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne()
 	@JoinColumn(name = "fk_manager")
 	private Manager manager;
 
 	// relacion * a * utilizando una tabla intermedia
-	@ManyToMany
+	@ManyToMany()
 	@JoinTable(name = "project_team", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "emp_no"))
 	private Set<Employee> team = new HashSet<Employee>(0);
 
 	// Relacion 1 a * con la clase ProjectHours
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "fk_project")
+	@JoinColumn(name = "fk_project", updatable = false)
 	private List<ProjectHours> hours = new ArrayList<ProjectHours>();
 
 	public Project() {

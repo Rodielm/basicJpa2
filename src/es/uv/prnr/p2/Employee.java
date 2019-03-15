@@ -41,7 +41,7 @@ public class Employee {
 	private List<Salary> salaries = new ArrayList<>();
 
 	// Relacion bidireccional con Project
-	@ManyToMany(mappedBy="team")
+	@ManyToMany(mappedBy="team", fetch=FetchType.LAZY)
 	private List<Project> assignedTo = new ArrayList<>();
 
 	public Employee() {

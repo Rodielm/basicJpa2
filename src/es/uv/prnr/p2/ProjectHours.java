@@ -21,12 +21,12 @@ public class ProjectHours {
 	int hours;
 
 	// Relacion * a 1 con Employee
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne()
 	@JoinColumn(name = "fk_employee")
 	Employee employee;
 
 	// Relacion * a 1 con Project
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne()
 	@JoinColumn(name = "fk_project")
 	Project project;
 

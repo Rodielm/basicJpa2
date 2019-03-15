@@ -38,13 +38,13 @@ public class ProjectService {
 	 */
 
 	public Manager promoteToManager(int employeeId, long bonus) {
+		em.getTransaction().begin();
 		Employee emp = em.find(Employee.class, employeeId);
 		Manager manager = new Manager(emp, bonus);
-		em.getTransaction().begin();
+		// em.getTransaction().begin();
 		em.remove(emp);
 		em.persist(manager);
 		em.getTransaction().commit();
-
 		return manager;
 	}
 
@@ -65,6 +65,7 @@ public class ProjectService {
 		Project pro = new Project(name, d, m, budget, startDate, endDate, "Area1");
 		em.persist(pro);
 		em.getTransaction().commit();
+		
 		return pro;
 	}
 
@@ -134,8 +135,8 @@ public class ProjectService {
 	}
 
 	/**
-	 * Devuelve los meses con mayor número de horas de un año determinado
-	 * utilizando la namedQuery Project.getTopMonths
+	 * Devuelve los meses con mayor número de horas de un año determinado utilizando
+	 * la namedQuery Project.getTopMonths
 	 * 
 	 * @param projectId
 	 * @param year      año a seleccionar

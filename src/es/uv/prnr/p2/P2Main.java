@@ -24,36 +24,36 @@ public class P2Main {
 		ProjectService service = new ProjectService();
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("acmeEmployees");
 		EntityManager em = emf.createEntityManager();
+
 		// em.getTransaction().begin();
 
 		/* Comprobar funcionamiento */
-		Employee e = em.find(Employee.class, 222222);
-		e.print();
+		// Employee e = em.find(Employee.class, 222222);
+		// e.print();
 
-		Employee newEmployee = new Employee(1, "Edgar", "Cood", LocalDate.of(1923, 8, 19), LocalDate.now(),
-				Employee.Gender.M);
-		em.persist(newEmployee);
-		e = em.find(Employee.class, 1);
-		e.print();
-		em.remove(e);
-		em.getTransaction().commit();
+		// Employee newEmployee = new Employee(1, "Edgar", "Cood", LocalDate.of(1923, 8,
+		// 19), LocalDate.now(),
+		// Employee.Gender.M);
+		// em.persist(newEmployee);
+		// e = em.find(Employee.class, 1);
+		// e.print();
+		// em.remove(e);
+		// em.getTransaction().commit();
 
 		/* Ejercicio 2 */
 
 		Department proyDepartment = service.getDepartmentById("d005");
 		Manager projectManager = service.promoteToManager(10001, 1000L);
-		// Manager projectManager = service.em.find(Manager.class, 10001);
+
 		Project acmeProject = service.createBigDataProject("Persistence Layer", proyDepartment, projectManager,
 				new BigDecimal(1500000.99));
-
-		// Project acmeProject = em.find(Project.class, 47);
-		System.out.println(acmeProject.getName());
+		
 		service.assignTeam(acmeProject, 10001, 10005);
 
 		int totalHours = service.assignInitialHours(acmeProject.getId());
-		// int totalHours = service.assignInitialHours(47);
+		
 		System.out.println("Total project hours: " + totalHours);
-
+		
 		/*
 		 * Ejercicio 3. Prueba de consultas
 		 */
@@ -74,12 +74,14 @@ public class P2Main {
 		}
 
 		// Eliminamos la información creada *
-		em.getTransaction().begin();
-		Manager m = em.merge(projectManager);
-		Project p = em.merge(acmeProject);
-		em.remove(p);
-		em.createNativeQuery("Delete from manager where emp_no = " + m.getId()).executeUpdate();
-		em.getTransaction().commit();
+		// Manager projectManager = service.em.find(Manager.class, 10001);
+		// Project acmeProject = em.find(Project.class, 67);
+		// em.getTransaction().begin();
+		// em.merge(acmeProject);
+		// em.merge(projectManager);
+		// em.remove(acmeProject);
+		// em.createNativeQuery("Delete from manager where emp_no = " + projectManager.getId()).executeUpdate();
+		// em.getTransaction().commit();	
 
 		return;
 	}
